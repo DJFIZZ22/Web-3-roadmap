@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dApp Developer Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0f14;
+    --surface: #131720;
+    --border: #1e2535;
+    --border-lit: #2e3f58;
+    --blue: #4f8ef7;
+    --purple: #9b6dff;
+    --green: #2dd4a0;
+    --amber: #f5a623;
+    --pink: #f06292;
+    --sky: #38bdf8;
+    --text: #d0dae8;
+    --muted: #4e6178;
+    --dim: #1a2232;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(.22,1,.36,1) forwards 0.05s;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--green);
+    opacity: 0.4;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(42px, 8vw, 80px);
+    line-height: 1;
+    letter-spacing: -1px;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  h1 em { font-style: normal; color: var(--green); }
+
+  .tagline {
+    font-size: 12px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+  }
+
+  .stack-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    border: 1px solid var(--border-lit);
+    padding: 8px 14px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+  .stack-badge span { color: var(--sky); }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom,
+      var(--blue) 0%, var(--purple) 30%,
+      var(--green) 55%, var(--amber) 78%, var(--pink) 100%);
+    opacity: 0.2;
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 0 28px;
+    opacity: 0;
+    animation: rise 0.6s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .phase:nth-child(1) { animation-delay: 0.15s; }
+  .phase:nth-child(2) { animation-delay: 0.28s; }
+  .phase:nth-child(3) { animation-delay: 0.41s; }
+  .phase:nth-child(4) { animation-delay: 0.54s; }
+  .phase:nth-child(5) { animation-delay: 0.67s; }
+  .phase:nth-child(6) { animation-delay: 0.80s; }
+
+  .phase-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 22px;
+  }
+  .phase-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid;
+    position: relative;
+    z-index: 2;
+  }
+  .phase-stem {
+    width: 1px;
+    flex: 1;
+    min-height: 32px;
+    margin-top: 6px;
+    opacity: 0.15;
+  }
+
+  .phase-body { padding: 16px 0 52px; }
+
+  .phase-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .phase-num { font-size: 9px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+  .phase-time {
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .phase-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 4vw, 30px);
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+  .phase-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 600px;
+    margin-bottom: 22px;
+  }
+
+  /* SKILLS */
+  .skill-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .skill {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: default;
+  }
+  .skill:hover { background: #161d2a; border-color: var(--border-lit); }
+  .skill-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .skill-name { color: var(--text); line-height: 1.3; margin-bottom: 2px; }
+  .skill-sub  { font-size: 9px; color: var(--muted); line-height: 1.4; }
+
+  /* BUILD BOX */
+  .build-box {
+    border: 1px solid var(--border-lit);
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    max-width: 600px;
+  }
+  .build-label { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+  .build-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .build-desc  { font-size: 10px; color: var(--muted); line-height: 1.6; }
+  .build-icon  { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+
+  /* Phase colours */
+  .phase--p1 .phase-dot { border-color: var(--blue);   background: var(--blue);   box-shadow: 0 0 10px var(--blue); }
+  .phase--p1 .phase-stem { background: var(--blue); }
+  .phase--p1 .phase-title { color: var(--blue); }
+
+  .phase--p2 .phase-dot { border-color: var(--purple); background: var(--purple); box-shadow: 0 0 10px var(--purple); }
+  .phase--p2 .phase-stem { background: var(--purple); }
+  .phase--p2 .phase-title { color: var(--purple); }
+
+  .phase--p3 .phase-dot { border-color: var(--green);  background: var(--green);  box-shadow: 0 0 10px var(--green); }
+  .phase--p3 .phase-stem { background: var(--green); }
+  .phase--p3 .phase-title { color: var(--green); }
+
+  .phase--p4 .phase-dot { border-color: var(--sky);    background: var(--sky);    box-shadow: 0 0 10px var(--sky); }
+  .phase--p4 .phase-stem { background: var(--sky); }
+  .phase--p4 .phase-title { color: var(--sky); }
+
+  .phase--p5 .phase-dot { border-color: var(--amber);  background: var(--amber);  box-shadow: 0 0 10px var(--amber); }
+  .phase--p5 .phase-stem { background: var(--amber); }
+  .phase--p5 .phase-title { color: var(--amber); }
+
+  .phase--p6 .phase-dot { border-color: var(--pink);   background: var(--pink);   box-shadow: 0 0 10px var(--pink); }
+  .phase--p6 .phase-stem { background: var(--pink); }
+  .phase--p6 .phase-title { color: var(--pink); }
+
+  /* SECTION SHARED */
+  .section-block {
+    margin-top: 16px;
+    padding-top: 72px;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: rise 0.6s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .section-block:nth-of-type(1) { animation-delay: 1.0s; }
+  .section-block:nth-of-type(2) { animation-delay: 1.15s; }
+  .section-block:nth-of-type(3) { animation-delay: 1.3s; }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--green);
+    opacity: 0.4;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  /* STACK GRID */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .stack-card {
+    border: 1px solid var(--border);
+    padding: 16px;
+    background: var(--surface);
+  }
+  .stack-layer { font-size: 8px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .stack-tech  { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 4px; }
+  .stack-why   { font-size: 10px; color: var(--muted); line-height: 1.6; }
+
+  /* RESOURCES */
+  .res-group { margin-bottom: 40px; }
+  .res-group-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .res-group-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+
+  a.res-card {
+    display: block;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 14px 16px 28px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s, background 0.15s;
+  }
+  a.res-card:hover { border-color: var(--border-lit); background: #161d2a; transform: translateY(-2px); }
+  a.res-card .arrow { position: absolute; top: 12px; right: 12px; font-size: 12px; color: var(--muted); transition: all 0.15s; }
+  a.res-card:hover .arrow { color: var(--green); transform: translate(2px,-2px); }
+
+  .res-badge {
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .badge-free   { color: var(--green);  border-color: rgba(45,212,160,0.3); }
+  .badge-paid   { color: var(--amber);  border-color: rgba(245,166,35,0.3); }
+  .badge-docs   { color: var(--sky);    border-color: rgba(56,189,248,0.3); }
+  .badge-tool   { color: var(--purple); border-color: rgba(155,109,255,0.3); }
+  .badge-ctf    { color: var(--pink);   border-color: rgba(240,98,146,0.3); }
+  .badge-yt     { color: #f87171;       border-color: rgba(248,113,113,0.3); }
+
+  .res-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px; color: #fff; margin-bottom: 5px; padding-right: 18px; }
+  a.res-card:hover .res-name { color: var(--green); }
+  .res-note { font-size: 10px; color: var(--muted); line-height: 1.6; }
+  .res-free-flag { position: absolute; bottom: 8px; right: 10px; font-size: 8px; letter-spacing: 2px; color: var(--green); opacity: 0.5; }
+
+  /* TIPS */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .tip-card { border: 1px solid var(--border); padding: 18px 20px; background: var(--surface); }
+  .tip-icon  { font-size: 20px; margin-bottom: 10px; display: block; }
+  .tip-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px; color: #fff; margin-bottom: 6px; }
+  .tip-text  { font-size: 10px; color: var(--muted); line-height: 1.7; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: rise 0.6s ease forwards 1.5s;
+  }
+  footer em { color: var(--green); font-style: normal; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 30px 1fr; gap: 0 16px; }
+    .timeline::before { left: 14px; }
+    .stack-grid, .tips-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="eyebrow">dApp Developer Roadmap · 2026</div>
+    <h1>Build<br><em>dApps.</em><br>Ship on-chain.</h1>
+    <p class="tagline">A focused, project-first path to becoming a decentralised application developer. Every phase ends with something you can actually deploy and put in your portfolio.</p>
+    <div class="stack-badge">Recommended stack: <span>Next.js · Solidity · wagmi · viem · RainbowKit · Hardhat · The Graph · IPFS</span></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <!-- PHASE 1 -->
+    <div class="phase phase--p1">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 01</span><span class="phase-time">3–5 weeks</span></div>
+        <div class="phase-title">Web Dev Foundations</div>
+        <p class="phase-desc">dApp frontends are web apps that talk to a blockchain. Before touching any Web3 tooling, lock down your core web skills. If you're already comfortable here, skim fast and move on.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">JavaScript (ES6+)</div><div class="skill-sub">Async/await, promises, modules, destructuring</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">React & Next.js</div><div class="skill-sub">Components, hooks, state, routing — your UI layer</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">TypeScript</div><div class="skill-sub">Types, interfaces — essential for viem & wagmi</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Node.js & npm</div><div class="skill-sub">Package management, scripts, env variables</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Git & GitHub</div><div class="skill-sub">Version control, branching, portfolio hosting</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">REST APIs & fetch</div><div class="skill-sub">Reading API responses — you'll use this constantly</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🏗️</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">A live crypto price dashboard</div>
+            <div class="build-desc">Fetch token prices from the CoinGecko API and display them in a React + Next.js app. Deploy to Vercel. Proves you can build and ship a web project before adding any blockchain complexity.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase phase--p2">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 02</span><span class="phase-time">2–3 weeks</span></div>
+        <div class="phase-title">Blockchain Essentials</div>
+        <p class="phase-desc">You don't need to implement consensus to build dApps — but you need to understand what you're building on. Gas, wallets, and transactions will hit you every single day.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">How blockchains work</div><div class="skill-sub">Blocks, nodes, finality, immutability</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Wallets & keys</div><div class="skill-sub">Public/private keys, addresses, seed phrases</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Transactions & gas</div><div class="skill-sub">How txns work, gas fees, EIP-1559 basics</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Ethereum & L2s</div><div class="skill-sub">Mainnet, Arbitrum, Optimism, Base, Polygon</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">What is a smart contract?</div><div class="skill-sub">Bytecode, ABI, deployment, state on-chain</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">MetaMask & Etherscan</div><div class="skill-sub">Set up a wallet, get testnet ETH, read transactions</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🔍</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">Wallet balance explorer</div>
+            <div class="build-desc">Build a Next.js app where a user enters an Ethereum address and sees their ETH balance and recent transactions — using the Alchemy or Etherscan API. No wallet connection yet; just read from the chain.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase phase--p3">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 03</span><span class="phase-time">5–8 weeks</span></div>
+        <div class="phase-title">Smart Contracts with Solidity</div>
+        <p class="phase-desc">Your dApp's backend lives on-chain. Learn Solidity well enough to write, test, and deploy contracts — and to read existing ones. You don't need to be an auditor, but you need to know what's dangerous.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Solidity fundamentals</div><div class="skill-sub">Types, functions, mappings, events, modifiers</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Remix IDE</div><div class="skill-sub">Browser-based IDE — perfect for early experimentation</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Hardhat</div><div class="skill-sub">Compile, test, deploy, run a local node</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">OpenZeppelin contracts</div><div class="skill-sub">ERC-20, ERC-721, access control — use these, don't reinvent them</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Contract testing</div><div class="skill-sub">Write tests for every function — revert cases too</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Deploying to testnet</div><div class="skill-sub">Sepolia, deploy scripts, verify on Etherscan</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">ABI & contract interface</div><div class="skill-sub">What the ABI is and how to call functions externally</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Common attack vectors</div><div class="skill-sub">Reentrancy, access control bugs, integer overflow</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🪙</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">ERC-20 token + basic crowdsale</div>
+            <div class="build-desc">Deploy an ERC-20 token to Sepolia. Write a crowdsale contract that accepts ETH and mints tokens. Write tests for every function. Verify both contracts on Etherscan so the world can see your code.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase phase--p4">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 04</span><span class="phase-time">5–8 weeks</span></div>
+        <div class="phase-title">The dApp Frontend Stack</div>
+        <p class="phase-desc">This is your core craft as a dApp developer. Connect a React/Next.js frontend to your deployed contracts. Master wallet connections, reading chain state, and sending transactions. This is what most dApp devs do day-to-day.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">viem</div><div class="skill-sub">Modern TypeScript library for Ethereum interaction</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">wagmi hooks</div><div class="skill-sub">useReadContract, useWriteContract, useAccount</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">RainbowKit</div><div class="skill-sub">Drop-in wallet modal — MetaMask, WalletConnect + more</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Reading contract state</div><div class="skill-sub">Live balance displays, contract variable reads</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Sending transactions</div><div class="skill-sub">Transaction lifecycle, pending/success/error states</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Event listeners</div><div class="skill-sub">watchContractEvent — real-time UI updates</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">RPC providers</div><div class="skill-sub">Alchemy & Infura — private nodes for production</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">dApp UX patterns</div><div class="skill-sub">Pending spinners, tx confirmations, user-friendly errors</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🔗</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">Full-stack token dApp</div>
+            <div class="build-desc">Connect your Phase 3 ERC-20 contract to a Next.js UI. Show the connected wallet's token balance, let users transfer tokens, and display a live feed of recent Transfer events. Deploy the frontend to Vercel.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="phase phase--p5">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 05</span><span class="phase-time">4–8 weeks</span></div>
+        <div class="phase-title">Data, Storage & Infrastructure</div>
+        <p class="phase-desc">On-chain storage is expensive. Real dApps combine blockchain data with indexers, decentralised storage, and external APIs. This is what separates a toy project from a production dApp.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">The Graph</div><div class="skill-sub">Index & query on-chain events via GraphQL subgraphs</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">IPFS</div><div class="skill-sub">Decentralised file storage — the NFT metadata standard</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Pinata</div><div class="skill-sub">Managed IPFS pinning — easiest way to store files on IPFS</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Alchemy / Moralis APIs</div><div class="skill-sub">NFT data, wallet history, token prices at scale</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Chainlink Price Feeds</div><div class="skill-sub">Bring real-world data (ETH price etc.) on-chain</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Multi-chain support</div><div class="skill-sub">Chain switching, network detection, L2 RPC config</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🖼️</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">NFT minting dApp</div>
+            <div class="build-desc">Deploy an ERC-721 contract. Upload artwork + metadata to IPFS via Pinata. Build a minting UI with live supply counter and wallet-gated minting. Display a gallery of minted NFTs pulled from a subgraph on The Graph.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 6 -->
+    <div class="phase phase--p6">
+      <div class="phase-marker"><div class="phase-dot"></div><div class="phase-stem"></div></div>
+      <div class="phase-body">
+        <div class="phase-meta"><span class="phase-num">Phase 06</span><span class="phase-time">Ongoing</span></div>
+        <div class="phase-title">Ship, Specialise & Get Hired</div>
+        <p class="phase-desc">You have the core stack. Now pick a lane, build in public, and enter hackathons. The best Web3 jobs go to people who are already visible, shipping, and contributing.</p>
+        <div class="skill-cols">
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">DeFi protocol integration</div><div class="skill-sub">Add Uniswap swaps or Aave lending to your dApp</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Account Abstraction (ERC-4337)</div><div class="skill-sub">Gasless transactions, smart wallets, social login</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Privy / Dynamic</div><div class="skill-sub">Auth that works for non-crypto users — email, socials</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Contract security</div><div class="skill-sub">Audit your own code, run Slither, complete Ethernaut</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">ETHGlobal hackathons</div><div class="skill-sub">Build fast, meet teams, get seen by protocol sponsors</div></div></div>
+          <div class="skill"><span class="skill-icon">⬡</span><div><div class="skill-name">Upgradeable contracts</div><div class="skill-sub">Proxy patterns — essential for any production dApp</div></div></div>
+        </div>
+        <div class="build-box">
+          <span class="build-icon">🚀</span>
+          <div>
+            <div class="build-label">Build this</div>
+            <div class="build-title">Your capstone dApp — something you'd actually use</div>
+            <div class="build-desc">A DAO voting tool, a DeFi dashboard, a token-gated app. Deploy to mainnet or a production L2. Write a post-mortem. Share it publicly on Twitter and GitHub. This is your portfolio centrepiece.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- PRODUCTION STACK -->
+  <div class="section-block">
+    <div class="section-eyebrow">The Stack</div>
+    <div class="section-title">Production dApp Stack 2026</div>
+    <p class="section-sub">What battle-tested dApp teams are actually shipping with. Mix and match based on your project needs.</p>
+    <div class="stack-grid">
+      <div class="stack-card"><div class="stack-layer">UI Framework</div><div class="stack-tech">Next.js + React</div><div class="stack-why">SSR, routing, API routes — the standard for dApp frontends in 2026</div></div>
+      <div class="stack-card"><div class="stack-layer">Chain Interaction</div><div class="stack-tech">viem + wagmi</div><div class="stack-why">TypeScript-first, replaces ethers.js in most new projects</div></div>
+      <div class="stack-card"><div class="stack-layer">Wallet Connection</div><div class="stack-tech">RainbowKit</div><div class="stack-why">Best-in-class wallet modal — 100+ wallets out of the box</div></div>
+      <div class="stack-card"><div class="stack-layer">Smart Contracts</div><div class="stack-tech">Solidity + Hardhat</div><div class="stack-why">Most widely supported tooling with a huge plugin ecosystem</div></div>
+      <div class="stack-card"><div class="stack-layer">Data Indexing</div><div class="stack-tech">The Graph</div><div class="stack-why">GraphQL subgraphs for querying historical on-chain events at scale</div></div>
+      <div class="stack-card"><div class="stack-layer">Decentralised Storage</div><div class="stack-tech">IPFS via Pinata</div><div class="stack-why">Industry standard for NFT metadata and decentralised file storage</div></div>
+      <div class="stack-card"><div class="stack-layer">RPC Provider</div><div class="stack-tech">Alchemy</div><div class="stack-why">Reliable node access, NFT APIs, and webhooks — generous free tier</div></div>
+      <div class="stack-card"><div class="stack-layer">Styling</div><div class="stack-tech">Tailwind + shadcn/ui</div><div class="stack-why">Composable components and utility classes — fastest way to build polished UIs</div></div>
+      <div class="stack-card"><div class="stack-layer">Auth (web2-friendly)</div><div class="stack-tech">Privy</div><div class="stack-why">Email, social, and wallet login in one — best for onboarding mainstream users</div></div>
+    </div>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section-block">
+    <div class="section-eyebrow">Learning Resources</div>
+    <div class="section-title">Everything you need, linked.</div>
+    <p class="section-sub">Curated specifically for dApp builders. Most are completely free.</p>
+
+    <div class="res-group">
+      <div class="res-group-label"><span class="dot" style="background:#9b6dff"></span>Courses & Guided Learning</div>
+      <div class="res-grid">
+        <a class="res-card" href="https://updraft.cyfrin.io/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free</div>
+          <div class="res-name">Cyfrin Updraft</div>
+          <div class="res-note">The most comprehensive free Web3 education platform. Full Solidity, security, and DeFi curricula by Patrick Collins.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://cryptozombies.io/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free · Interactive</div>
+          <div class="res-name">CryptoZombies</div>
+          <div class="res-note">Learn Solidity by building a zombie game. Best gamified first step for smart contract devs — genuinely fun.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://university.alchemy.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free</div>
+          <div class="res-name">Alchemy University</div>
+          <div class="res-note">7-week Ethereum bootcamp covering JS for Ethereum, smart contracts, and dApp development end-to-end.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://learnweb3.io/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free</div>
+          <div class="res-name">LearnWeb3.io</div>
+          <div class="res-note">Structured 4-degree track from Freshman to Senior dApp dev. Highly project-focused — you deploy something every lesson.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://speedrunethereum.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free · Challenges</div>
+          <div class="res-name">Speed Run Ethereum</div>
+          <div class="res-note">Build a DEX, NFT marketplace, multisig, and more with scaffolded challenges. Perfect for filling out your portfolio fast.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://www.dappuniversity.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Free / Paid</div>
+          <div class="res-name">Dapp University</div>
+          <div class="res-note">Step-by-step tutorials for building complete dApps — voting apps, token sales, DEXes. Great free YouTube content.</div>
+        </a>
+        <a class="res-card" href="https://www.udemy.com/course/ethereum-and-solidity-the-complete-developers-guide/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-paid">Paid (~$15 on sale)</div>
+          <div class="res-name">Udemy: Ethereum & Solidity</div>
+          <div class="res-note">Stephen Grider's full-stack Ethereum course. Excellent structured video format for building real dApps from scratch.</div>
+        </a>
+        <a class="res-card" href="https://www.coursera.org/learn/decentralized-apps-on-blockchain" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-paid">Audit Free</div>
+          <div class="res-name">Coursera: Decentralised Apps</div>
+          <div class="res-note">University-grade course on end-to-end dApp design — smart contract testing, deployment, ERC standards, and frontend integration.</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="res-group">
+      <div class="res-group-label"><span class="dot" style="background:#38bdf8"></span>Docs, Tools & References</div>
+      <div class="res-grid">
+        <a class="res-card" href="https://wagmi.sh/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">wagmi Docs</div>
+          <div class="res-note">Full reference for React Ethereum hooks. The single most important doc to bookmark as a dApp frontend dev.</div>
+        </a>
+        <a class="res-card" href="https://viem.sh/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">viem Docs</div>
+          <div class="res-note">TypeScript-first Ethereum library. The foundation under wagmi — deep-dive here when you need low-level control.</div>
+        </a>
+        <a class="res-card" href="https://www.rainbowkit.com/docs/introduction" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">RainbowKit Docs</div>
+          <div class="res-note">Beautiful wallet connection modal, configured in minutes. Supports 100+ wallets and chains out of the box.</div>
+        </a>
+        <a class="res-card" href="https://hardhat.org/docs" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-tool">Tool</div>
+          <div class="res-name">Hardhat Docs</div>
+          <div class="res-note">The most widely used Ethereum dev environment. Local network, testing, deployment, and plugin ecosystem.</div>
+        </a>
+        <a class="res-card" href="https://docs.openzeppelin.com/contracts/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">OpenZeppelin Contracts</div>
+          <div class="res-note">Industry-standard smart contract library. ERC-20, ERC-721, access control — don't write these from scratch.</div>
+        </a>
+        <a class="res-card" href="https://thegraph.com/docs/en/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">The Graph Docs</div>
+          <div class="res-note">Build and deploy subgraphs that index your contract events into a queryable GraphQL API. Essential for any complex dApp.</div>
+        </a>
+        <a class="res-card" href="https://docs.pinata.cloud/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">Pinata Docs (IPFS)</div>
+          <div class="res-note">Managed IPFS pinning for NFT metadata and decentralised storage. The easiest IPFS on-ramp for dApp developers.</div>
+        </a>
+        <a class="res-card" href="https://remix.ethereum.org/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-tool">Browser IDE</div>
+          <div class="res-name">Remix IDE</div>
+          <div class="res-note">Zero-install browser IDE for Solidity. Best for experimenting and learning — no local setup required.</div>
+        </a>
+        <a class="res-card" href="https://solidity-by-example.org/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Reference</div>
+          <div class="res-name">Solidity by Example</div>
+          <div class="res-note">Concise, well-explained Solidity patterns for common use cases. Bookmark this — you'll return to it constantly.</div>
+        </a>
+        <a class="res-card" href="https://docs.alchemy.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-docs">Docs</div>
+          <div class="res-name">Alchemy Docs</div>
+          <div class="res-note">API reference for node access, NFT APIs, token APIs, and webhooks. Get your free API key here to start building.</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="res-group">
+      <div class="res-group-label"><span class="dot" style="background:#f06292"></span>Practice & Security</div>
+      <div class="res-grid">
+        <a class="res-card" href="https://ethernaut.openzeppelin.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-ctf">CTF</div>
+          <div class="res-name">Ethernaut</div>
+          <div class="res-note">Hack vulnerable smart contracts to learn how real attacks work. Do this in parallel with Phase 3 — it'll change how you write Solidity.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://www.damnvulnerabledefi.xyz/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-ctf">CTF · Advanced</div>
+          <div class="res-name">Damn Vulnerable DeFi</div>
+          <div class="res-note">Advanced DeFi attack challenges — flash loans, price manipulation, reentrancy. For when Ethernaut gets easy.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://ethereum.stackexchange.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Forum</div>
+          <div class="res-name">Ethereum StackExchange</div>
+          <div class="res-note">High-signal Q&A for EVM questions. Often has better answers than official docs for edge cases and tricky bugs.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://ethglobal.com/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Hackathons</div>
+          <div class="res-name">ETHGlobal</div>
+          <div class="res-note">The premier Web3 hackathon series. Build in a weekend, meet future co-founders, and get spotted by protocols that are hiring.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="res-group">
+      <div class="res-group-label"><span class="dot" style="background:#2dd4a0"></span>Video & Community</div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.youtube.com/@PatrickAlphaC" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-yt">YouTube</div>
+          <div class="res-name">Patrick Collins</div>
+          <div class="res-note">The gold standard for free Web3 education. 32-hour Solidity + Foundry courses, DeFi and security deep-dives.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://www.youtube.com/@DappUniversity" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-yt">YouTube</div>
+          <div class="res-name">Dapp University (YouTube)</div>
+          <div class="res-note">Project-first tutorials — DEXes, NFT marketplaces, voting dApps. Great for seeing complete builds from zero.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://www.useweb3.xyz/" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Aggregator</div>
+          <div class="res-name">useWeb3.xyz</div>
+          <div class="res-note">Curated index of the best Web3 tutorials, courses, and tooling across the whole ecosystem — updated regularly.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+        <a class="res-card" href="https://www.paradigm.xyz/writing" target="_blank">
+          <span class="arrow">↗</span>
+          <div class="res-badge badge-free">Research</div>
+          <div class="res-name">Paradigm Research Blog</div>
+          <div class="res-note">Deep technical writing from one of crypto's top research firms. Essential reading once you're past the basics.</div>
+          <span class="res-free-flag">FREE</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="section-block">
+    <div class="section-eyebrow">Mindset</div>
+    <div class="section-title">How to actually learn this.</div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">🚢</span>
+        <div class="tip-title">Ship at every phase</div>
+        <div class="tip-text">Don't skip the build prompts. A deployed dApp on a testnet — even a simple one — is worth more to an employer than a stack of completed courses.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🔐</span>
+        <div class="tip-title">Think like an attacker</div>
+        <div class="tip-text">Do Ethernaut in parallel with Phase 3. Understanding how contracts get exploited will fundamentally change how you write and review Solidity.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📖</span>
+        <div class="tip-title">Read real production code</div>
+        <div class="tip-text">Uniswap, Aave, and Compound are open source and fully audited. Reading their contracts is the fastest way to level up after the fundamentals.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🌐</span>
+        <div class="tip-title">Build in public</div>
+        <div class="tip-text">Post your projects on GitHub and Twitter/X. The Web3 community is small and tight-knit — being visible matters enormously for getting noticed and hired.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>dApp Developer Roadmap · 2026</div>
+    <div>Built for <em>builders</em></div>
+  </footer>
+
+</div>
+</body>
+</html>
